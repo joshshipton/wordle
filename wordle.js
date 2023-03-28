@@ -1,67 +1,70 @@
-function Wordle(target, guess){
+const secretWord = "goats";
+let guesses = document.querySelector(".guesses");
+let input = document.querySelector("input");
+let button = document.querySelector("button");
+let results = [];
+turns = 0;
 
-    let results = [];
 
-    if(target.length != 5 && guess.length != 5){
-        return console.log("input words are not 5 characters long")
+button.addEventListener("click", check_guess);
+input.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    check_guess();
+  }
+});
+
+function getScore(target, guess) {
+
+  let tempResults = [];
+  for (i = 0; i < target.length; i++) {
+    if (target[i] == guess[i]) {
+      tempResults.push(2);
+    } else {
+    if (target.includes(guess[i])) {
+        tempResults.push(1);
+      } else {
+        tempResults.push(0);
+      }
     }
 
-    for(i=0;i<target.length;i++){
-
-        if(target[i] == guess[i]){
-            results.push(2);
-            console.log(`The ${i+1} letter is in the right position`)
-        }else{
-            if(target.includes(guess[i])){
-                results.push(1);
-                console.log(`The ${i+1} letter is in the word but in a different position`)
-                // if its in the word once but not twice
-            
-            }  
-            else{
-                console.log(`The ${i+1} letter is not in the word`);
-                results.push(0);
-            }
-        }
-    console.log(results);}
+  }
+  console.log(tempResults);
+  results = tempResults;
 }
 
-Wordle("scope", "eagle");
-
-
-const secretWord = 'goats';
-
-let guesses = document.querySelector('.guesses');
-let input = document.querySelector('input');
-let button = document.querySelector('button');
-
-button.addEventListener('click', check_guess)
-input.addEventListener('keydown', function(e){
-
-})
-
-
-
-function check_guess(){
-    console.log('check_guess ran')
-    //get the content of the guess
-    //put the content of the guess in a <p> element in the main div
-    //change the color of the letters based on the wordle function's result
-    let guessContent = input.value;
-    if(guessContent.length === 5){
-    let newItem = document.createElement('p');
-    newItem.textContent = guessContent;
-    guesses.appendChild(newItem);
-    input.value = '';}else{
-        input = ''
-        alert('guess needs to be 5 letters long');
-        check_guess();
-    }
-
-
+function check_guess() {
+  turns += 1;
+  console.log(turns);
+  console.log("check_guess ran");
+  let guessContent = input.value;
+  let guessParent = document.createElement('div');
+  guessParent.classList.add('guessParent');
+  guesses.appendChild(guessParent);
+  if (guessContent.length === 5) {
+  
+    input.value = "";
+    getScore(secretWord, guessContent);
+    for (i = 0; i < 5; i++) {
+      let newItem = document.createElement('p')
+      if (results[i] === 0) {
+        newItem.style.color = "red";
+      } else if (results[i] === 1) {
+        newItem.style.color = "yellow";
+      } else newItem.style.color = "green";
+     newItem.textContent = guessContent[i]
+     guessParent.appendChild(newItem)}
+     if(guessContent === secretWord){
+        alert('You win!!!!!');
+        button.remove();
+        input.remove();
+     }
+     if(turns === 9){
+        alert('You lose');
+        button.remove();
+        input.remove();
+     }
+  } else {
+    input.value = "";
+    alert("guess needs to be 5 letters long");
+  }
 }
-
-
-
-
-
