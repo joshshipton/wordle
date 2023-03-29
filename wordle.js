@@ -47,10 +47,10 @@ function check_guess() {
     for (i = 0; i < 5; i++) {
       let newItem = document.createElement('p')
       if (results[i] === 0) {
-        newItem.style.color = "red";
+        newItem.style.backgroundColor = "red";
       } else if (results[i] === 1) {
-        newItem.style.color = "yellow";
-      } else newItem.style.color = "green";
+        newItem.style.backgroundColor = "yellow";
+      } else newItem.style.backgroundColor = 'green';
      newItem.textContent = guessContent[i]
      guessParent.appendChild(newItem)}
      if(guessContent === secretWord){
