@@ -3,6 +3,8 @@ let guesses = document.querySelector(".guesses");
 let input = document.querySelector("input");
 let button = document.querySelector("button");
 let results = [];
+let timeUrl = "https://drtnf.net/wordle_time_left";
+
 turns = 0;
 
 
@@ -52,6 +54,7 @@ function getScore(target, guess) {
 }
 
 async function check_guess() {
+  timeTillWordChanges();
   turns += 1;
   console.log(turns);
   let guessContent = input.value;
@@ -93,4 +96,23 @@ async function check_guess() {
     input.value = "";
     alert("guess needs to be 5 letters long");
   }
+}
+
+function timeTillWordChanges() {
+  return new Promise((resolve, reject) => {
+    const xhttp = new XMLHttpRequest();
+    xhttp.open('GET', timeUrl);
+    xhttp.send();
+    xhttp.onload = async () => {
+      if (xhttp.readyState == 4 && xhttp.status == 201) {
+        let time = await xhttp.response;
+        let clock = document.createElement('footer');
+        clock.textContent = time;
+        document.body.appendChild(clock); // Add the clock element to the page
+        resolve(time);
+      } else {
+        reject(`Error ${xhttp.status}`);
+      }
+    };
+  });
 }
